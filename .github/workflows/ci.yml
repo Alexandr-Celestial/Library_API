@@ -139,7 +139,7 @@ jobs:
 
       - name: Install and start Docker
         run: |
-          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << "EOF"
+          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
           curl -fsSL https://get.docker.com -o get-docker.sh
           sh get-docker.sh
           # Запуск Docker демона
@@ -151,7 +151,7 @@ jobs:
 
       - name: Create .env file on server
         run: |
-          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << "EOF"
+          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
           cd "${{ secrets.DEPLOY_DIR }}"
           cat > .env <<EOL
           SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
@@ -166,7 +166,7 @@ jobs:
 
       - name: Install and start Docker compose
         run: |
-          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << "EOF"
+          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
           cd "${{ secrets.DEPLOY_DIR }}"
           sudo docker compose down -v || true
           sudo docker compose up -d --build
