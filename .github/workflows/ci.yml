@@ -141,10 +141,10 @@ jobs:
           ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
           cd "${{ secrets.DEPLOY_DIR }}"
           cat > .env << EOL
-          SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
-          DB_NAME=${{ secrets.DB_NAME }}
-          DB_USER=${{ secrets.DB_USER }}
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          SECRET_KEY="${{ secrets.DJANGO_SECRET_KEY }}"
+          DB_NAME="${{ secrets.DB_NAME }}"
+          DB_USER="${{ secrets.DB_USER }}"
+          DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
           DB_HOST=db
           DB_PORT=5432
           EOL
