@@ -151,7 +151,7 @@ jobs:
 
       - name: Create .env file on server
         run: |
-          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << "EOF"
+          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} <<EOF
           cd "${{ secrets.DEPLOY_DIR }}"
           cat > .env <<EOL
           SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
