@@ -120,7 +120,7 @@ jobs:
           DEPLOY_DIR="${{ secrets.DEPLOY_DIR }}"
           if [ ! -d "\$DEPLOY_DIR/.git" ]; then
             echo "Cloning repository into \$DEPLOY_DIR..."
-            git clone "https://github.com/Alexandr-Celestial/Healthy_habits_tracker.git" "\$DEPLOY_DIR"
+            git clone "https://github.com/Alexandr-Celestial/Library_API.git" "\$DEPLOY_DIR"
           fi
           cd "\$DEPLOY_DIR"
           git fetch origin
