@@ -130,7 +130,7 @@ jobs:
 
       - name: Install dependencies on server
         run: |
-          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << "EOF"
+          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
           cd "${{ secrets.DEPLOY_DIR }}"
           curl -sSL https://install.python-poetry.org | python3 -
           ~/.local/bin/poetry lock
