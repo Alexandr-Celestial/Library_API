@@ -111,8 +111,8 @@ jobs:
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
-#      - name: SSH Debug Connection
-#        run: ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} || true
+      #      - name: SSH Debug Connection
+      #        run: ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} || true
 
       - name: Copy project files to server
         run: |
@@ -151,11 +151,10 @@ jobs:
 
       - name: Create .env file on server
         run: |
-          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
+          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << "EOF"
           cd "${{ secrets.DEPLOY_DIR }}"
           cat > .env <<EOL
           SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
-          TG_TOKEN=${{ secrets.TG_TOKEN }}
           DB_NAME=${{ secrets.DB_NAME }}
           DB_USER=${{ secrets.DB_USER }}
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
@@ -163,6 +162,7 @@ jobs:
           DB_PORT=5432
           EOL
           EOF
+
 
       - name: Install and start Docker compose
         run: |
