@@ -144,7 +144,7 @@ jobs:
           cd "\$DEPLOY_DIR"
           
           echo "Создаем .env файл с переменными окружения..."
-          cat > .env << EOL
+          cat > .env << 'EOL'
           SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
           DB_NAME=${{ secrets.DB_NAME }}
           DB_USER=${{ secrets.DB_USER }}
@@ -155,12 +155,12 @@ jobs:
           DEBUG=False
           ALLOWED_HOSTS=localhost,127.0.0.1,${{ secrets.SERVER_IP }},0.0.0.0
           EOL
-      
-          echo "Проверяем создание .env файла:"
-          ls -la .env
-          echo "Содержимое .env:"
-          cat .env
-          EOF
+
+      echo "Проверяем создание .env файла:"
+      ls -la .env
+      echo "Содержимое .env:"
+      cat .env
+      EOF
 
       - name: Build and run Docker containers
         run: |
