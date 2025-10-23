@@ -104,7 +104,7 @@ jobs:
 
       - name: Copy project files to server
         run: |
-          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
+          ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           DEPLOY_DIR="${{ secrets.DEPLOY_DIR }}"
           if [ ! -d "\$DEPLOY_DIR/.git" ]; then
             echo "Cloning repository into \$DEPLOY_DIR..."
@@ -112,8 +112,9 @@ jobs:
           fi
           cd "\$DEPLOY_DIR"
           git fetch origin
-          git checkout "feature/start_project"
-          git reset --hard "origin/feature/start_project"
+          git checkout -B feature/start_project origin/feature/start_project
+          git reset --hard origin/feature/start_project
+          git clean -fd
           EOF
 
       - name: Install dependencies on server
@@ -150,12 +151,36 @@ jobs:
           EOL
           EOF
 
-      - name: Install and start Docker compose
+      - name: Build and run Docker containers
         run: |
           ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          cd "${{ secrets.DEPLOY_DIR }}"
+          DEPLOY_DIR="${{ secrets.DEPLOY_DIR }}"
+          cd "\$DEPLOY_DIR"
+
+          # Проверяем что мы в правильной директории
+          echo "Текущая директория: $(pwd)"
+          echo "Файлы в директории:"
+          ls -la
+
+          # Проверяем что Dockerfile существует
+          if [ ! -f "Dockerfile" ]; then
+              echo "ОШИБКА: Dockerfile не найден в текущей директории!"
+              echo "Ищем Dockerfile в проекте:"
+              find . -name "Dockerfile" -type f
+              exit 1
+          fi
+
+          echo "Dockerfile найден, начинаем сборку..."
+
+          # Останавливаем и удаляем старые контейнеры
           sudo docker compose down -v || true
+
+          # Собираем и запускаем контейнеры
           sudo docker compose build --no-cache
           sudo docker compose up -d
-          echo "Application started in background"
+
+          echo "Проверяем запущенные контейнеры:"
+          sudo docker compose ps
+
+          echo "Приложение запущено в фоне"
           EOF
