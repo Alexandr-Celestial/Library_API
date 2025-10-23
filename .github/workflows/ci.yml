@@ -140,15 +140,26 @@ jobs:
       - name: Create .env file on server
         run: |
           ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          cd "${{ secrets.DEPLOY_DIR }}"
-          cat > .env << 'EOL'
+          DEPLOY_DIR="${{ secrets.DEPLOY_DIR }}"
+          cd "\$DEPLOY_DIR"
+          
+          echo "Создаем .env файл с переменными окружения..."
+          cat > .env << EOL
           SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
           DB_NAME=${{ secrets.DB_NAME }}
           DB_USER=${{ secrets.DB_USER }}
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           DB_HOST=db
           DB_PORT=5432
+          REDIS_URL=redis://redis:6379
+          DEBUG=False
+          ALLOWED_HOSTS=localhost,127.0.0.1,${{ secrets.SERVER_IP }},0.0.0.0
           EOL
+      
+          echo "Проверяем создание .env файла:"
+          ls -la .env
+          echo "Содержимое .env:"
+          cat .env
           EOF
 
       - name: Build and run Docker containers
